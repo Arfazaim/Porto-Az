@@ -16,7 +16,7 @@
     </div>
 
     <div class="alert alert-success">
-        Halo, <strong>{{ Auth::user()->name }}</strong>! Selamat datang di dashboard.
+        Halo, <strong>{{ Auth::user()->name }}</strong>! Selamat datang di dashboard ARFAZAIM.
     </div>
 
     <a href="{{ route('portfolios.index') }}" class="btn btn-primary">Kelola Portfolio</a>
