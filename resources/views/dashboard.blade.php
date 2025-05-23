@@ -19,7 +19,7 @@
         Halo, <strong>{{ Auth::user()->name }}</strong>! Selamat datang di dashboard ARFAZAIM.
     </div>
 
-    <a href="{{ route('portfolios.index') }}" class="btn btn-primary">Kelola Portfolio</a>
+    <a href="{{ route('portfolio.index') }}" class="btn btn-primary">Kelola Portfolio</a>
 </div>
 </body>
 </html>
