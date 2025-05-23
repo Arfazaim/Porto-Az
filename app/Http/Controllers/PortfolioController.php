@@ -2,77 +2,61 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Portfolio;
 use Illuminate\Http\Request;
+use App\Models\AboutMe;     // Import Model AboutMe
+use App\Models\Skill;       // Import Model Skill
+use App\Models\Experience;  // Import Model Experience
+use App\Models\Project;     // Import Model Project
+use App\Models\Contact;     // Import Model Contact
 
 class PortfolioController extends Controller
 {
+    /**
+     * Menampilkan halaman utama portfolio.
+     */
     public function index()
     {
-        $portfolios = Portfolio::all();
-        return view('portfolios.index', compact('portfolios'));
+        // Mengambil data "About Me" (karena biasanya hanya ada satu entri)
+        $aboutMe = AboutMe::first(); // Mengambil entri pertama
+
+        // Mengambil semua data skills, diurutkan berdasarkan level tertinggi
+        $skills = Skill::orderBy('level', 'desc')->get();
+
+        // Mengambil semua data experiences, diurutkan dari yang terbaru (tanggal mulai)
+        $experiences = Experience::orderBy('start_date', 'desc')->get();
+
+        // Mengambil semua data projects, diurutkan dari yang terbaru (tanggal selesai)
+        $projects = Project::orderBy('completion_date', 'desc')->get();
+
+        // Mengambil semua data contacts
+        $contacts = Contact::all();
+
+        // Mengirim data-data ini ke view 'portfolio.index'
+        return view('portfolio.index', compact(
+            'aboutMe',
+            'skills',
+            'experiences',
+            'projects',
+            'contacts'
+        ));
     }
 
-    public function create()
+    /**
+     * Menampilkan halaman detail proyek tertentu.
+     */
+    public function showProject($slug)
     {
-        return view('portfolios.create');
+        // Mencari proyek berdasarkan slug. Gunakan firstOrFail() agar Laravel otomatis
+        // mengembalikan 404 jika proyek tidak ditemukan.
+        $project = Project::where('slug', $slug)->firstOrFail();
+
+        // Mengirim data proyek ke view 'portfolio.show_project'
+        return view('portfolio.show_project', compact('project'));
     }
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'title' => 'required',
-            'description' => 'required',
-            'link' => 'nullable|url',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
-
-        $data = $request->all();
-
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('images', 'public');
-            $data['image'] = $imagePath;
-        }
-
-        Portfolio::create($data);
-
-        return redirect()->route('portfolios.index')->with('success', 'Project berhasil ditambahkan!');
-    }
-
-    public function show(Portfolio $portfolio)
-    {
-        return view('portfolios.show', compact('portfolio'));
-    }
-
-    public function edit(Portfolio $portfolio)
-    {
-        return view('portfolios.edit', compact('portfolio'));
-    }
-
-    public function update(Request $request, Portfolio $portfolio)
-    {
-        $request->validate([
-            'title' => 'required',
-            'description' => 'required',
-            'link' => 'nullable|url',
-            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
-
-        $data = $request->all();
-
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('images', 'public');
-            $data['image'] = $imagePath;
-        }
-
-        $portfolio->update($data);
-
-        return redirect()->route('portfolios.index')->with('success', 'Project berhasil diupdate!');
-    }
-
-    public function destroy(Portfolio $portfolio)
-    {
-        $portfolio->delete();
-        return redirect()->route('portfolios.index')->with('success', 'Project berhasil dihapus!');
-    }
+    // Kamu bisa menambahkan method lain di sini, misalnya untuk form kontak, dll.
+    // public function contact(Request $request)
+    // {
+    //     // Logika untuk mengirim email atau menyimpan pesan kontak
+    // }
 }
