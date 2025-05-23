@@ -94,22 +94,27 @@
             <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Work Experience</h2>
             @if($experiences->isNotEmpty())
                 <div class="space-y-6">
-                    @foreach($experiences as $exp) {{-- Ubah $experience menjadi $exp --}}
-                        <div class="bg-gray-50 p-4 rounded-lg shadow">
-                            <h3 class="text-xl font-semibold text-gray-700">{{ $exp->title }} at {{ $exp->company }}</h3>
-                            <p class="text-gray-500 text-sm mb-2">{{ $exp->start_date->format('M Y') }} - {{-- Ubah $experience menjadi $exp --}}
-                                @if($exp->is_current) {{-- Ubah $experience menjadi $exp --}}
-                                    Present
-                                @else
-                                    {{ $exp->end_date ? $exp->end_date->format('M Y') : 'N/A' }} {{-- Ubah $experience menjadi $exp --}}
-                                @endif
-                                @if($exp->location) {{-- Ubah $experience menjadi $exp --}}
-                                    <span class="ml-2">({{ $exp->location }})</span> {{-- Ubah $experience menjadi $exp --}}
-                                @endif
-                            </p>
-                            <p class="text-gray-700">{{ $exp->description }}</p> {{-- Ubah $experience menjadi $exp --}}
-                        </div>
-                    @endforeach
+                   @foreach($experiences as $experience)
+    @if($experience instanceof \App\Models\Experience) {{-- Tambahkan pengecekan ini --}}
+        <div class="bg-gray-50 p-4 rounded-lg shadow">
+            <h3 class="text-xl font-semibold text-gray-700">{{ $experience->title }} at {{ $experience->company }}</h3>
+            <p class="text-gray-500 text-sm mb-2">{{ $experience->start_date->format('M Y') }} -
+                @if($experience->is_current)
+                    Present
+                @else
+                    {{ $experience->end_date ? $experience->end_date->format('M Y') : 'N/A' }}
+                @endif
+                @if($experience->location)
+                    <span class="ml-2">({{ $experience->location }})</span>
+                @endif
+            </p>
+            <p class="text-gray-700">{{ $experience->description }}</p>
+        </div>
+    @else
+        {{-- Ini akan tampil jika ada item di $experiences yang bukan instance Experience Model --}}
+        <p class="text-red-500">Error: Invalid experience data encountered.</p>
+    @endif
+@endforeach
                 </div>
             @else
                 <p class="text-center text-gray-600">No work experience added yet. Add some from the admin panel!</p>

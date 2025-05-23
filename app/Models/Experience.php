@@ -19,9 +19,15 @@ class Experience extends Model
         'description',
     ];
 
-    // PASTIKAN BARIS INI ADA DAN BENAR
-    protected $dates = [
-        'start_date',
-        'end_date',
+    // INI YANG BENAR DAN MODERN UNTUK TANGGAL
+    protected $casts = [
+        'start_date' => 'datetime',
+        'end_date' => 'datetime',
     ];
+
+    // Hapus atau komentari baris ini jika sebelumnya ada:
+    // protected $dates = [
+    //     'start_date',
+    //     'end_date',
+    // ];
 }
