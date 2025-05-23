@@ -22,7 +22,6 @@ class Project extends Model
     ];
 
     // Kolom yang harus dikonversi menjadi instance Date
-    protected $dates = [
-        'completion_date',
-    ];
+    protected $dates = ['created_at', 'updated_at', 'published_at']; // sesuaikan dengan kolom kamu
+
 }
